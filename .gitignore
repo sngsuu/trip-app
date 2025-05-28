@@ -1,8 +1,12 @@
-# .gitignore
-/build/
-/out/
-/.idea/
-/*.iml
+# IDEA / JetBrains
+.idea/
+*.iml
+
+# Gradle
 .gradle/
-/*.log
+build/
+
+# 기타
+*.log
 .env
+.DS_Store
