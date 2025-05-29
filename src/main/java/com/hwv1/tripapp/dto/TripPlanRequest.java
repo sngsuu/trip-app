@@ -1,48 +1,17 @@
+// ✅ 여행 요약 요청용 DTO (파일명: TripPlanRequest.java)
 package com.hwv1.tripapp.dto;
 
-import java.util.List;
+import lombok.Data;
 
-/**
- * 여행 계획 요청 DTO
- * 클라이언트로부터 받은 입력 데이터를 담는다
- */
+@Data
 public class TripPlanRequest {
-
-    private String destination;  // 여행 목적지
-    private String startDate;    // 여행 시작일
-    private String endDate;      // 여행 종료일
-    private List<String> preferences; // 선호하는 활동 또는 테마
-
-    // Getter / Setter
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public List<String> getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(List<String> preferences) {
-        this.preferences = preferences;
-    }
+    private String destination; // 목적지
+    private String startDate;   // 여행 시작일
+    private String endDate;     // 여행 종료일
+    private String companion;   // 동반자 유형
+    private String transport;   // 이동 수단
+    private int distance;       // 하루 이동 가능 거리 (km)
+    private String diet;        // 식사 취향
+    private int budget;         // 일일 예산
+    private String model;       // 사용할 AI 모델명 (프론트에서 전달)
 }

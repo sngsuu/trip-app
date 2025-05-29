@@ -1,39 +1,22 @@
+// ✅ 여행 요약 응답 DTO (파일명: TripPlanResponse.java)
 package com.hwv1.tripapp.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
-/**
- * 여행 계획 응답 DTO
- * 클라이언트에게 반환할 여행 일정 결과를 담는다
- */
+@Data
+@AllArgsConstructor
 public class TripPlanResponse {
+    private String summary; // 여행 개요 텍스트
+    private List<DailyPlan> dailyPlan; // 일별 일정 목록
+    private List<String> costs; // 비용 항목 문자열 리스트
 
-    private List<String> dailyPlan;   // 일자별 계획 (간단한 문자열 리스트로 표현)
-    private int estimatedCost;        // 예상 비용 (원화 기준)
-    private String summary;           // 전체 여행 요약
-
-    // Getter / Setter
-    public List<String> getDailyPlan() {
-        return dailyPlan;
-    }
-
-    public void setDailyPlan(List<String> dailyPlan) {
-        this.dailyPlan = dailyPlan;
-    }
-
-    public int getEstimatedCost() {
-        return estimatedCost;
-    }
-
-    public void setEstimatedCost(int estimatedCost) {
-        this.estimatedCost = estimatedCost;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
+    @Data
+    @AllArgsConstructor
+    public static class DailyPlan {
+        private String date; // ex) "6월 9일 (첫 번째 날)"
+        private List<String> activities; // 해당 날짜의 일정 활동 리스트
     }
 }
