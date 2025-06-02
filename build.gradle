@@ -15,6 +15,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    // ✅ HttpClient 5.x 사용 (Spring Boot 3.2.5와 호환)
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

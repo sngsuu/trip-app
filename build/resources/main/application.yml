@@ -6,3 +6,9 @@ spring:
     name: trip-app
   config:
     import: "application-ai.yml"
+
+groq:
+  api-key: ${GROQ_API_KEY}
+
+chatgpt:
+  api-key: ${CHATGPT_API_KEY}

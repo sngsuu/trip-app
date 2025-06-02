@@ -4,6 +4,7 @@ package com.hwv1.tripapp.service.impl;
 import com.hwv1.tripapp.dto.TripPlanRequest;
 import com.hwv1.tripapp.dto.TripPlanResponse;
 import com.hwv1.tripapp.service.TripPlanService;
+import com.hwv1.tripapp.util.TripPromptTemplate;
 import com.hwv1.tripapp.util.TripResultParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +34,19 @@ public class TripPlanServiceImpl implements TripPlanService {
     @Override
     public TripPlanResponse generatePlan(TripPlanRequest request) {
         String model = request.getModel();
-        String prompt = buildPrompt(request);
 
-        // ✅ 공통 메시지 구조 (OpenAI / Groq / OpenRouter 호환)
+        // ✅ 템플릿에서 프롬프트 생성
+        String prompt = TripPromptTemplate.buildPrompt(
+                request.getDestination(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getCompanion(),
+                request.getTransport(),
+                String.valueOf(request.getDistance()),
+                request.getDiet()
+        );
+
+        // ✅ 공통 메시지 구조
         Map<String, Object> body = new HashMap<>();
         body.put("model", model);
         body.put("messages", List.of(
@@ -49,7 +60,7 @@ public class TripPlanServiceImpl implements TripPlanService {
         String apiUrl;
         String apiKey;
 
-        // ✅ 모델 이름 기준으로 분기
+        // ✅ 모델 분기
         if (model.startsWith("gpt-") || model.startsWith("mixtral") || model.contains("llama") || model.contains("gemma")) {
             apiUrl = "https://api.groq.com/openai/v1/chat/completions";
             apiKey = groqApiKey;
@@ -62,39 +73,16 @@ public class TripPlanServiceImpl implements TripPlanService {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(
-                    apiUrl,
-                    entity,
-                    Map.class
-            );
-
+            ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl, entity, Map.class);
             List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
             Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
             String content = (String) message.get("content");
 
-            // ✅ 마크다운 텍스트 → TripPlanResponse 구조로 파싱
+            // ✅ 파싱 적용
             return TripResultParser.parse(content);
 
         } catch (Exception e) {
             return new TripPlanResponse("[API 호출 오류] " + e.getMessage(), List.of(), List.of());
         }
-    }
-
-    // ✅ 사용자 입력 기반 프롬프트 생성
-    private String buildPrompt(TripPlanRequest req) {
-        return String.format("""
-            목적지: %s
-            여행 기간: %s ~ %s
-            %s%s하루 이동 가능 거리: %dkm
-            %s%s여행 일정 요약, 추천 장소, 활동, 음식, 예상 비용 등을 포함해 주세요.
-            """,
-                req.getDestination(),
-                req.getStartDate(), req.getEndDate(),
-                req.getCompanion() != null ? "동반자: " + req.getCompanion() + "\n" : "",
-                req.getTransport() != null ? "이동 수단: " + req.getTransport() + "\n" : "",
-                req.getDistance(),
-                req.getDiet() != null ? "식사 취향: " + req.getDiet() + "\n" : "",
-                req.getBudget() > 0 ? "일일 예산: " + req.getBudget() + "원\n" : ""
-        );
     }
 }
