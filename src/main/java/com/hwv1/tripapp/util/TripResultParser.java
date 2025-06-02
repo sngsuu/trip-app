@@ -29,7 +29,7 @@ public class TripResultParser {
         List<TripPlanResponse.DailyPlan> dailyPlans = new ArrayList<>();
 
         Pattern dateBlockPattern = Pattern.compile(
-                "(?=####\\s*(\\d{4}-\\d{2}-\\d{2})\\s*\\(([^)]+)\\)\\n)((?:-\\s.*\\n?)*)",
+                "####\\s*(\\d{4}-\\d{2}-\\d{2})\\s*\\(([^)]+)\\)\\s*\\n((?:-\\s.*\\n?)*)",
                 Pattern.MULTILINE
         );
 
